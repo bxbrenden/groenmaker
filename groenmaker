@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+"""groenmaker.
+
+Usage:
+    groenmaker compare <try_push> <central_push>
+    groenmaker run -c <commit_hash> -q <fuzzy_query> [--fix]
+
+Options:
+    -h --help       Show this screen.
+    -v --version    Show the groenmaker version.
+    -q --query      Specify a fuzzy query for the mach tool
+    -c --commit     Specify a Mercurial commit hash
+    --fix           Run iteratively until all failing tests are disabled
+
+"""
+from docopt import docopt
+
+
+if __name__ == '__main__':
+    arguments = docopt(__doc__, version="groenmaker 0.1.0")
+    print(arguments)
