@@ -14,8 +14,30 @@ Options:
 
 """
 from docopt import docopt
+from thdiff import thdiff
 
 
-if __name__ == '__main__':
-    arguments = docopt(__doc__, version="groenmaker 0.1.0")
-    print(arguments)
+if __name__ == "__main__":
+    args = docopt(__doc__, version="groenmaker 0.1.0")
+    print(args)
+    """
+    {'--commit': False,
+     '--fix': False,
+     '--query': False,
+     '<central_push>': 'my_central_hash',
+     '<commit_hash>': None,
+     '<fuzzy_query>': None,
+     '<try_push>': 'my_try_hash',
+     'compare': True,
+     'run': False}
+    """
+
+    if "compare" in args and args["compare"]:
+        if (
+            "<try_push>" in args
+            and "<central_push>" in args
+            and all((args["<try_push>"], args["<central_push>"]))
+        ):
+            msg = f'Comparing try push {args["<try_push>"][:10]} '
+            msg += f'with central push {args["<central_push>"][:10]}'
+            print(msg)

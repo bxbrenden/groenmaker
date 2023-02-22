@@ -4,7 +4,7 @@ import sys
 from mozci.push import Push
 
 
-def thdiff(commit_mc, commit_try):
+def thdiff(commit_try, commit_mc):
     """Given one ref from central and one from try, show failures in try."""
     relevant_failures = []
     central = Push(commit_mc, branch="mozilla-central")
@@ -26,7 +26,7 @@ def thdiff(commit_mc, commit_try):
 
 
 def usage():
-    usage_str = "USAGE: thdiff <CENTRAL_COMMIT_HASH> <TRY_COMMIT_HASH>"
+    usage_str = "USAGE: thdiff <TRY_COMMIT_HASH> <CENTRAL_COMMIT_HASH>"
     raise SystemExit(usage_str)
 
 
@@ -37,7 +37,7 @@ def main():
     except IndexError:
         usage()
 
-    thdiff(commit_mc, commit_try)
+    thdiff(commit_try, commit_mc)
 
 
 if __name__ == '__main__':

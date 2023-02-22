@@ -10,6 +10,7 @@ ipython = "*"
 flake8-bugbear = "*"
 isort = "*"
 mozci = {extras = ["cache-seeded-file"], version = "*"}
+black = "*"
 
 [dev-packages]
 
