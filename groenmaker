@@ -14,7 +14,7 @@ Options:
 
 """
 from docopt import docopt
-from thdiff import thdiff
+from thdiff.thdiff import thdiff
 
 
 if __name__ == "__main__":
@@ -41,3 +41,4 @@ if __name__ == "__main__":
             msg = f'Comparing try push {args["<try_push>"][:10]} '
             msg += f'with central push {args["<central_push>"][:10]}'
             print(msg)
+            thdiff(args['<try_push>'], args['<central_push>'])
