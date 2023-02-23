@@ -8,4 +8,6 @@ def run(shell_cmd):
        Return a three-tuple with (returncode, stdout, stderr)."""
     cmd = shlex.split(shell_cmd)
     result = subprocess.run(cmd, capture_output=True)
-    return (result.returncode, result.stdout, result.stderr)
+    return (result.returncode,
+            result.stdout.decode('utf-8'),
+            result.stderr.decode('utf-8'))

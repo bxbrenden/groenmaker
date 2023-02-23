@@ -3,14 +3,15 @@
 
 Usage:
     groenmaker compare <try_push> <central_push>
-    groenmaker run -c <commit_hash> -q <fuzzy_query> [--fix]
+    groenmaker run -c <commit_hash> -q <fuzzy_query> [--leading-quote] [--fix]
 
 Options:
-    -h --help       Show this screen.
-    -v --version    Show the groenmaker version.
-    -q --query      Specify a fuzzy query for the mach tool
-    -c --commit     Specify a Mercurial commit hash
-    --fix           Run iteratively until all failing tests are disabled
+    -h --help           Show this screen.
+    -v --version        Show the groenmaker version.
+    -q --query          Specify a fuzzy query for the mach tool
+    -l --leading-quote  Add a leading single-quote to the mach fuzzy query
+    -c --commit         Specify a Mercurial commit hash
+    --fix               Run iteratively until all failing tests are disabled
 
 """
 import os
@@ -27,19 +28,18 @@ MC_REPO_PATH = "/home/bhyde/git/mozilla-central"
 if __name__ == "__main__":
     try:
         args = docopt(__doc__, version="groenmaker 0.1.0")
-        # print(args)
+        print(args)
 
-        if "compare" in args and args["compare"]:
-            if (
-                "<try_push>" in args
-                and "<central_push>" in args
-                and all((args["<try_push>"], args["<central_push>"]))
-            ):
+        if args["compare"]:
+            if all((args["<try_push>"], args["<central_push>"])):
                 msg = f'Comparing try push {args["<try_push>"][:10]} '
                 msg += f'with central push {args["<central_push>"][:10]}'
                 print(msg)
                 thdiff(args["<try_push>"], args["<central_push>"])
-        elif "run" in args and args["run"]:
+            else:
+                err = "Error: please verify try and central commmits')"
+                raise SystemExit(err)
+        elif args["run"]:
             commit_hash = args["<commit_hash>"]
             update_cmd = f"hg update -R {MC_REPO_PATH} {commit_hash}"
             print(f"Updating Mercurial repo to commit {commit_hash}")
@@ -47,7 +47,13 @@ if __name__ == "__main__":
             if update[0] == 0:
                 print(f"Successfully checked out {args['<commit_hash>']}")
                 os.chdir(MC_REPO_PATH)
-                push = f"./mach try fuzzy --full -q '{args['<fuzzy_query>']}'"
+                if args["--leading-quote"]:
+                    push = "./mach try fuzzy --full -q "
+                    push += '\\'
+                    push += "'"
+                    push += f"{args['<fuzzy_query>']}"
+                else:
+                    push = f"./mach try fuzzy --full -q '{args['<fuzzy_query>']}'"
                 try_push = pusher.run(push)
                 print(try_push[0], try_push[1], try_push[2], sep="\n\n")
     except KeyboardInterrupt:
