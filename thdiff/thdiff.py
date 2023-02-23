@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 import sys
 
+from loguru import logger
+
 from mozci.push import Push
+
+
+logger.disable("mozci")
 
 
 def thdiff(commit_try, commit_mc):
@@ -40,5 +45,5 @@ def main():
     thdiff(commit_try, commit_mc)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
