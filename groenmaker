@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """groenmaker.
 
+Utility for gathering failed test results from try / mozilla-central.
+Also a util. for running try-pushes iteratively, disabling failed tests
+along the way.
+
 Usage:
     groenmaker compare <try_push> <central_push>
     groenmaker run -c <commit_hash> -q <fuzzy_query> [--leading-quote] [--fix]
