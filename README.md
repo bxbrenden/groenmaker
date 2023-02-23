@@ -22,7 +22,7 @@ pipenv shell
 ## Usage
 In order to see the usage, simply run `./groenmaker --help`, and you'll see the most up-to-date help doc, e.g.:
 ```
-   ./groenmaker --help
+./groenmaker --help
 groenmaker.
 
 Usage:
