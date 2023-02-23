@@ -13,32 +13,42 @@ Options:
     --fix           Run iteratively until all failing tests are disabled
 
 """
+import os
+
 from docopt import docopt
+
+from pusher import pusher
 from thdiff.thdiff import thdiff
+
+# TODO REMOVE THIS CONSTANT
+MC_REPO_PATH = "/home/bhyde/git/mozilla-central"
 
 
 if __name__ == "__main__":
-    args = docopt(__doc__, version="groenmaker 0.1.0")
-    print(args)
-    """
-    {'--commit': False,
-     '--fix': False,
-     '--query': False,
-     '<central_push>': 'my_central_hash',
-     '<commit_hash>': None,
-     '<fuzzy_query>': None,
-     '<try_push>': 'my_try_hash',
-     'compare': True,
-     'run': False}
-    """
+    try:
+        args = docopt(__doc__, version="groenmaker 0.1.0")
+        # print(args)
 
-    if "compare" in args and args["compare"]:
-        if (
-            "<try_push>" in args
-            and "<central_push>" in args
-            and all((args["<try_push>"], args["<central_push>"]))
-        ):
-            msg = f'Comparing try push {args["<try_push>"][:10]} '
-            msg += f'with central push {args["<central_push>"][:10]}'
-            print(msg)
-            thdiff(args['<try_push>'], args['<central_push>'])
+        if "compare" in args and args["compare"]:
+            if (
+                "<try_push>" in args
+                and "<central_push>" in args
+                and all((args["<try_push>"], args["<central_push>"]))
+            ):
+                msg = f'Comparing try push {args["<try_push>"][:10]} '
+                msg += f'with central push {args["<central_push>"][:10]}'
+                print(msg)
+                thdiff(args["<try_push>"], args["<central_push>"])
+        elif "run" in args and args["run"]:
+            commit_hash = args["<commit_hash>"]
+            update_cmd = f"hg update -R {MC_REPO_PATH} {commit_hash}"
+            print(f"Updating Mercurial repo to commit {commit_hash}")
+            update = pusher.run(f"hg update -R {MC_REPO_PATH} {commit_hash}")
+            if update[0] == 0:
+                print(f"Successfully checked out {args['<commit_hash>']}")
+                os.chdir(MC_REPO_PATH)
+                push = f"./mach try fuzzy --full -q '{args['<fuzzy_query>']}'"
+                try_push = pusher.run(push)
+                print(try_push[0], try_push[1], try_push[2], sep="\n\n")
+    except KeyboardInterrupt:
+        raise SystemExit("\nCTRL+C pressed. Exiting.\n")
