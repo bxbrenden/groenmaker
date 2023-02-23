@@ -28,13 +28,13 @@ MC_REPO_PATH = "/home/bhyde/git/mozilla-central"
 if __name__ == "__main__":
     try:
         args = docopt(__doc__, version="groenmaker 0.1.0")
-        print(args)
 
         if args["compare"]:
             if all((args["<try_push>"], args["<central_push>"])):
                 msg = f'Comparing try push {args["<try_push>"][:10]} '
                 msg += f'with central push {args["<central_push>"][:10]}'
                 print(msg)
+                print('This may take some time ⏳...')
                 thdiff(args["<try_push>"], args["<central_push>"])
             else:
                 err = "Error: please verify try and central commmits')"
