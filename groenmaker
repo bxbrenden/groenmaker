@@ -40,20 +40,25 @@ if __name__ == "__main__":
                 err = "Error: please verify try and central commmits')"
                 raise SystemExit(err)
         elif args["run"]:
+            if args['--fix']:
+                raise SystemExit('The --fix arg is not yet implemented 😔')
             commit_hash = args["<commit_hash>"]
             update_cmd = f"hg update -R {MC_REPO_PATH} {commit_hash}"
             print(f"Updating Mercurial repo to commit {commit_hash}")
             update = pusher.run(f"hg update -R {MC_REPO_PATH} {commit_hash}")
             if update[0] == 0:
                 print(f"Successfully checked out {args['<commit_hash>']}")
+                fuzz_q = args['<fuzzy_query>']
                 os.chdir(MC_REPO_PATH)
                 if args["--leading-quote"]:
                     push = "./mach try fuzzy --full -q "
                     push += '\\'
                     push += "'"
-                    push += f"{args['<fuzzy_query>']}"
+                    push += f"'{fuzz_q}'"
                 else:
-                    push = f"./mach try fuzzy --full -q '{args['<fuzzy_query>']}'"
+                    push = f"./mach try fuzzy --full -q '{fuzz_q}'"
+                print('Running a try-push using the following mach command:')
+                print(push)
                 try_push = pusher.run(push)
                 print(try_push[0], try_push[1], try_push[2], sep="\n\n")
     except KeyboardInterrupt:
