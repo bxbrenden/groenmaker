@@ -9,8 +9,8 @@ flake8 = "*"
 ipython = "*"
 flake8-bugbear = "*"
 isort = "*"
-mozci = {extras = ["cache-seeded-file"], version = "*"}
 black = "*"
+loguru = "*"
 
 [dev-packages]
 
